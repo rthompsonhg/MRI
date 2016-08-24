@@ -1,0 +1,36 @@
+select DISTINCT a.[VendID],  
+a.[VendorName], 
+a.[VendorName2], 
+a.[Address1], 
+a.[Address2], 
+a.City, 
+a.State, 
+a.[ZipCode], 
+a.[CountryCode], 
+a.EmailAddress, 
+a.[NumberofInvoices], 
+a.[NumberofChecks], 
+a.[TotalSpend], 
+a.[MainPhone], 
+a.[Contact]
+From (select a.vendid as 'VendID', 
+a.vendnme1 as 'VendorName', 
+a.vendnme2 as 'VendorName2', 
+a.vendaddr as 'Address1', 
+a.vendaddr2 as 'Address2', 
+a.city as 'City', 
+a.state as 'State', 
+a.zip as 'ZipCode', 
+a.country as 'CountryCode', 
+a.hg_emailaddr as EmailAddress, 
+count(distinct(b.invoice)) as 'NumberofInvoices', 
+count(distinct(b.checkno)) as 'Numberofchecks', 
+sum(b.itemamt) as 'TotalSpend', 
+a.PHONE as 'MainPhone' , 
+a.Contact as 'Contact' 
+from vend as a, hist as b  
+where a.vendid=b.vendid and b.expped between '201601' and '201608' AND a.PAYTYPE<>'T' AND 
+ENTITYID IN ('115', '357','507', '16A', 'CLV', 'CWY', 'D2L', 'EBP', 'EFA', 'EXP', 'FRE', 'MED', 'MSP', 'PIT', 'WPB' )
+group by a.vendid, a.vendnme1, a.vendnme2, a.vendaddr, a.vendaddr2, a.city, a.state, a.zip, a.country, a.hg_emailaddr, a.Days1, a.Phone, a.Contact, a.Vendtype,
+a.PRIORITYID
+having sum(b.itemamt)>1.) as A ORDER BY VENDID
